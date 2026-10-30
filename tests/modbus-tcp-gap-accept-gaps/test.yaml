@@ -1,0 +1,27 @@
+requires:
+  min-version: 9
+
+pcap: ../modbus-tcp-gap-default/input.pcap
+
+args:
+  - -k none
+  - --set app-layer.protocols.modbus.accept-gaps=yes
+
+checks:
+  - filter:
+      count: 19
+      match:
+        event_type: modbus
+        src_ip: 10.128.0.0
+        modbus.request.function_raw: 3
+  - filter:
+      count: 20
+      match:
+        event_type: modbus
+        src_ip: 10.128.0.1
+        modbus.request.function_raw: 3
+  - filter:
+      count: 1
+      match:
+        event_type: stats
+        stats.app_layer.error.modbus.gap: 0
